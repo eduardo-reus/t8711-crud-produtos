@@ -20,6 +20,8 @@ class Produto_Controller:
                     self.view.exibir_mensagem("Produto cadastrado com sucesso!")
                 except ValueError:
                     self.view.exibir_mensagem("Erro: Entrada inválida. Tente novamente.", False)
+                except KeyboardInterrupt:
+                    self.view.exibir_mensagem("Operação cancelada pelo usuário.", False)
                 
             
             elif opcao == 2:
