@@ -6,7 +6,7 @@ class Cliente:
         self._limite_credito = limite_credito
     
     def atualizar_dados(self, novo_nome, novo_data_nascimento, novo_limite_credito):
-        if self._limite_credito < 0:
+        if novo_limite_credito < 0:
             raise ValueError("O limite não pode ser negativo.")
 
         self._nome = novo_nome

@@ -1,4 +1,7 @@
-class Usuario_DAO:
+from app.dao.generic_dao import Generic_DAO
+class Usuario_DAO(Generic_DAO):
+    pass
+"""
     def __init__(self):
         self.__usuarios = []
         self.__novo_id = 1
@@ -27,3 +30,4 @@ class Usuario_DAO:
     
     def update(self, usuario_atualizado):
         return True
+        """

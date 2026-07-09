@@ -37,7 +37,7 @@ class Produto_Terminal_View:
         print(f"{'ID':<4} | {'NOME':<20} | {'ESTOQUE':<7} | {'PREÇO':<10}")
         print("-"*50)
         for p in produtos:
-            print(f"{p._id:<4} | {p._nome:<20} | {p._estoque:<7} | {p._preco:<10.2f}")
+            print(f"{p.id:<4} | {p.nome:<20} | {p.estoque:<7} | {p.preco:<10.2f}")
         print("-"*50)
     
     def exibir_mensagem(self, mensagem, sucesso=True):
