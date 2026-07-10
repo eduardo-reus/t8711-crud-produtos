@@ -15,7 +15,7 @@ class Produto:
 
     @property
     def nome(self):
-        return self._nome
+        return self._nome.upper()
 
     @nome.setter
     def nome(self, novo_nome):
@@ -37,6 +37,11 @@ class Produto:
     def preco(self, novo_preco):
         self._preco = novo_preco
 
+    @property
+    def valor_estoque(self):
+        return self._preco * self._estoque
+    
+
     def atualizar_dados(self, novo_nome, novo_estoque, novo_preco):
         if novo_preco < 0:
             raise ValueError("O preço não pode ser negativo.")
@@ -47,7 +52,3 @@ class Produto:
         self._preco = novo_preco
             
 
-p1 = Produto(1,"Playstation",100,3780)
-
-print(p1.nome)
-p1.nome = "Playstation 5 PRO"

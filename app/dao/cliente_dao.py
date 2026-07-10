@@ -4,7 +4,7 @@ class Cliente_DAO:
         self.__novo_id = 1
 
     def save(self, cliente):
-        cliente._id = self.__novo_id
+        cliente.id = self.__novo_id
         self.__clientes.append(cliente)
         self.__novo_id += 1
         return cliente
@@ -14,7 +14,7 @@ class Cliente_DAO:
     
     def get_by_id(self, id):
         for c in self.__clientes:
-            if c._id == id:
+            if c.id == id:
                 return c
         return None
     

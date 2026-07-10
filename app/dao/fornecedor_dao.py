@@ -4,7 +4,7 @@ class Fornecedor_DAO:
         self.__novo_id = 1
 
     def save(self, fornecedor):
-        fornecedor._id = self.__novo_id
+        fornecedor.id = self.__novo_id
         self.__fornecedores.append(fornecedor)
         self.__novo_id += 1
         return fornecedor
@@ -14,7 +14,7 @@ class Fornecedor_DAO:
 
     def get_by_id(self, id):
         for p in self.__fornecedores:
-            if p._id == id:
+            if p.id == id:
                 return p
         return None
     

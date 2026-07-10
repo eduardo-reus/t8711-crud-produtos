@@ -10,6 +10,51 @@ class Fornecedor:
         if sla < 0:
             raise ValueError("O SLA de atendimento não pode ser negativo.")
 
+    # Encapsulamento do ID
+    @property
+    def id(self):
+        return self._id
+    
+    @id.setter
+    def id(self, novo_id):
+        self._id = novo_id
+
+    # Encapsulamento da Razão Social
+    @property
+    def razao_social(self):
+        return self._razao_social
+    
+    @razao_social.setter
+    def razao_social(self, nova_razao):
+        self._razao_social = nova_razao
+
+    # Encapsulamento do Nome Fantasia
+    @property
+    def nome_fantasia(self):
+        return self._nome_fantasia
+    
+    @nome_fantasia.setter
+    def nome_fantasia(self, novo_nome):
+        self._nome_fantasia = novo_nome
+
+    # Encapsulamento do CNPJ
+    @property
+    def cnpj(self):
+        return self._cnpj
+    
+    @cnpj.setter
+    def cnpj(self, novo_cnpj):
+        self._cnpj = novo_cnpj
+
+    # Encapsulamento do SLA de Atendimento
+    @property
+    def sla_atendimento(self):
+        return self._sla_atendimento
+    
+    @sla_atendimento.setter
+    def sla_atendimento(self, novo_sla):
+        self._sla_atendimento = novo_sla
+
     def atualizar_dados(self, nova_razao_social, novo_nome_fantasia, novo_cnpj, novo_sla):
         self.validar_sla(novo_sla)
         self._razao_social = nova_razao_social
