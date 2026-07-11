@@ -1,3 +1,4 @@
+from app.core.data_utils import Data_Utils
 class Cliente:
     def __init__(self, id, nome, data_nascimento, limite_credito):
         self._id = id
@@ -35,6 +36,9 @@ class Cliente:
     def limite_credito(self, novo_limite_credito):
         self._limite_credito = novo_limite_credito
     
+    @property
+    def idade(self):
+        return Data_Utils.calcular_idade(self._data_nascimento)
 
     def atualizar_dados(self, novo_nome, novo_data_nascimento, novo_limite_credito):
         if novo_limite_credito < 0:

@@ -34,11 +34,11 @@ class Cliente_Terminal_View:
         if not clientes:
             print("Nenhum cliente cadastrado")
             return
-        print(f"{'ID':<4} | {'NOME':<20} | {'DATA DE NASCIMENTO':<20} | {'LIMITE DE CRÉDITO':<10}")
-        print("-"*60)
+        print(f"{'ID':<4} | {'NOME':<20} | {'DATA DE NASCIMENTO':<20} | { 'IDADE':<10} | {'LIMITE DE CRÉDITO':<10}")
+        print("-"*73)
         for c in clientes:
-            print(f"{c.id:<4} | {c.nome:<20} | {c.data_nascimento:<20} | {c.limite_credito:<10.2f}")
-        print("-"*60)
+            print(f"{c.id:<4} | {c.nome:<20} | {c.data_nascimento:<20} | {c.idade:<10} | {c.limite_credito:<10.2f}")
+        print("-"*73)
     
     def exibir_mensagem(self, mensagem, sucesso=True):
         cor = Fore.GREEN if sucesso else Fore.RED
