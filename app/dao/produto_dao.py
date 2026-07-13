@@ -1,3 +1,3 @@
-from app.dao.generic_dao import Generic_DAO
-class Produto_DAO(Generic_DAO):
-    pass
+from app.dao.dao import DAO
+class Produto_DAO(DAO):
+    
