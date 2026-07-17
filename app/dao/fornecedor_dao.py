@@ -1,29 +1,121 @@
-class Fornecedor_DAO:
-    def __init__(self):
-        self.__fornecedores = []
-        self.__novo_id = 1
+from app.dao.dao import DAO
+from app.models.fornecedor import Fornecedor
+class Fornecedor_DAO(DAO):
+    def __init__(self, database):
+        self._database = database
 
     def save(self, fornecedor):
-        fornecedor.id = self.__novo_id
-        self.__fornecedores.append(fornecedor)
-        self.__novo_id += 1
+        conexao = self._database.conectar()
+        cursor = conexao.cursor()
+        sql =   """
+                    INSERT INTO FORNECEDOR
+                    (RAZAO_SOCIAL, NOME_FANTASIA, CNPJ, SLA_ATENDIMENTO)
+                    VALUES (%s, %s, %s, %s)
+                """
+        cursor.execute(sql, (
+            fornecedor.razao_social,
+            fornecedor.nome_fantasia,
+            fornecedor.cnpj,
+            fornecedor.sla_atendimento
+        ))
+        conexao.commit()
+        fornecedor.id = cursor.lastrowid
+        self._database.desconectar(cursor, conexao)
         return fornecedor
-
+    
     def get_all(self):
-        return list(self.__fornecedores)
-
+        conexao = self._database.conectar()
+        cursor = conexao.cursor()
+        sql =   """
+                    SELECT
+                        ID,
+                        RAZAO_SOCIAL,
+                        NOME_FANTASIA,
+                        CNPJ,
+                        SLA_ATENDIMENTO
+                    FROM
+                        FORNECEDOR
+                    ORDER BY 
+                        NOME_FANTASIA
+                """
+        cursor.execute(sql)
+        registros = cursor.fetchall()
+        fornecedores = []
+        for registro in registros:
+            fornecedores.append(
+                Fornecedor(
+                    registro[0],
+                    registro[1],
+                    registro[2],
+                    registro[3],
+                    registro[4]
+                )
+            )
+        self._database.desconectar(cursor, conexao)
+        return fornecedores
+    
     def get_by_id(self, id):
-        for p in self.__fornecedores:
-            if p.id == id:
-                return p
-        return None
+        conexao = self._database.conectar()
+        cursor = conexao.cursor()
+        sql =   """
+                    SELECT
+                        ID,
+                        NOME_FANTASIA,
+                        RAZAO_SOCIAL,
+                        CNPJ,
+                        SLA_ATENDIMENTO
+                    FROM
+                        FORNECEDOR
+                    WHERE
+                        ID = %s
+                """        
+        cursor.execute(sql,(id,))
+        registro = cursor.fetchone()
+        self._database.desconectar(cursor, conexao)
+        if registro is None:
+            return None
+        return Fornecedor(
+            registro[0],
+            registro[1],
+            registro[2],
+            registro[3],
+            registro[4]
+        )
+
+
+    def update(self, fornecedor):
+        conexao = self._database.conectar()
+        cursor = conexao.cursor()
+        sql =   """
+                    UPDATE FORNECEDOR SET
+                        NOME_FANTASIA    = %s,
+                        RAZAO_SOCIAL     = %s,
+                        CNPJ             = %s,
+                        SLA_ATENDIMENTO  = %s
+                    WHERE
+                        ID = %s
+                """
+        cursor.execute(sql,(
+                                fornecedor.nome_fantasia,
+                                fornecedor.razao_social,
+                                fornecedor.cnpj,
+                                fornecedor.sla_atendimento,
+                                fornecedor.id
+        ))
+        conexao.commit()
+        sucesso = cursor.rowcount > 0
+        self._database.desconectar(cursor, conexao)
+        return sucesso
     
     def delete(self, id):
-        fornecedor = self.get_by_id(id)
-        if fornecedor:
-            self.__fornecedores.remove(fornecedor)
-            return True
-        return False
-    
-    def update(self, fornecedor_atualizado):
-        return True
+        conexao = self._database.conectar()
+        cursor = conexao.cursor()
+        sql =   """
+                    DELETE FROM FORNECEDOR
+                    WHERE ID = %s
+                """
+        cursor.execute(sql,(id,))
+        conexao.commit()
+        sucesso = cursor.rowcount > 0
+        self._database.desconectar(cursor, conexao)
+        return sucesso

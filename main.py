@@ -33,13 +33,13 @@ class ErpApplication:
         self._dao_produtos = Produto_DAO(self._database)
         self._ctrl_produtos = Produto_Controller(dao=self._dao_produtos, view=Produto_Terminal_View())
         
-        self._dao_fornecedores = Fornecedor_DAO()
+        self._dao_fornecedores = Fornecedor_DAO(self._database)
         self._ctrl_fornecedores = Fornecedor_Controller(dao=self._dao_fornecedores, view=Fornecedor_Terminal_View())
 
-        self._dao_usuarios = Usuario_DAO()
+        self._dao_usuarios = Usuario_DAO(self._database)
         self._ctrl_usuarios = Usuario_Controller(dao=self._dao_usuarios, view=Usuario_Terminal_View())        
 
-        self._dao_clientes = Cliente_DAO()
+        self._dao_clientes = Cliente_DAO(self._database)
         self._ctrl_clientes = Cliente_Controller(dao=self._dao_clientes, view=Cliente_Terminal_View())   
 
     def _renderizar_menu_principal(self):

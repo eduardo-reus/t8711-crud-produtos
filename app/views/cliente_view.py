@@ -1,4 +1,5 @@
 from colorama import init, Fore, Style
+from app.core.data_utils import Data_Utils
 
 init(autoreset=True)
 
@@ -37,7 +38,7 @@ class Cliente_Terminal_View:
         print(f"{'ID':<4} | {'NOME':<20} | {'DATA DE NASCIMENTO':<20} | { 'IDADE':<10} | {'LIMITE DE CRÉDITO':<10}")
         print("-"*73)
         for c in clientes:
-            print(f"{c.id:<4} | {c.nome:<20} | {c.data_nascimento:<20} | {c.idade:<10} | {c.limite_credito:<10.2f}")
+            print(f"{c.id:<4} | {c.nome:<20} | {Data_Utils.data_para_string(c.data_nascimento):<20} | {c.idade:<10} | {c.limite_credito:<10.2f}")
         print("-"*73)
     
     def exibir_mensagem(self, mensagem, sucesso=True):

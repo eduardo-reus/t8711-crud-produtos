@@ -19,9 +19,15 @@ class Data_Utils:
             return True
         except ValueError:
             return False
+        
+
     @staticmethod
     def calcular_idade(data):
-        data_inicio = Data_Utils.string_para_data(data)
+        data_inicio = data
+        if isinstance(data, str):
+            data_inicio = Data_Utils.string_para_data(data)
+        elif not isinstance(data, date):
+            raise ValueError("A data está em um formato inválido.")
         hoje = date.today()
         idade = hoje.year - data_inicio.year
         if(hoje.month, hoje.day) < (data_inicio.month, data_inicio.day):

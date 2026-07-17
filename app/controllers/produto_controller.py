@@ -36,7 +36,7 @@ class Produto_Controller:
                     id_produto = int(self.view.ler_id())
                     produto_existente = self.dao.get_by_id(id_produto)
                     if produto_existente:
-                        nome, estoque, preco = self.view.ler_dados_produto()
+                        nome, estoque, preco = self.view.ler_dados_produto(produto_existente)
                         produto_existente.atualizar_dados(nome, estoque, preco)
                         self.dao.update(produto_existente)
                         self.view.exibir_mensagem("Produto atualizado com sucesso!")

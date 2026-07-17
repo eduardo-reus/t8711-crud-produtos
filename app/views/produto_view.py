@@ -18,12 +18,21 @@ class Produto_Terminal_View:
             return int(input("Escolha uma opção: "))
         except ValueError:
             return -1
-        
-    def ler_dados_produto(self):
+    def ler_campo(self, rotulo, valor_atual=None):
+        if valor_atual is not None:
+            prompt = f"{rotulo} [{Fore.GREEN}{valor_atual}{Style.RESET_ALL}]: "
+        else:
+            prompt = f"{rotulo}: "
+        valor = input(prompt)
+        if valor == "" and valor_atual is not None:
+            return valor_atual
+        return valor
+
+    def ler_dados_produto(self, produto_existente=None):
         print(Fore.CYAN + Style.BRIGHT + "=== CADASTRO DE PRODUTO ===")
-        nome = input("Digite o nome do produto: ")
-        estoque = int(input("Digite a quantidade em estoque: "))
-        preco = float(input("Digite o preço do produto: "))
+        nome = self.ler_campo("Nome do produto", produto_existente.nome if produto_existente else None)
+        estoque = int(self.ler_campo("Quantidade em estoque", str(produto_existente.estoque) if produto_existente else None))
+        preco = float(self.ler_campo("Preço do produto", str(produto_existente.preco) if produto_existente else None))
         return nome, estoque, preco
 
     def ler_id(self):
