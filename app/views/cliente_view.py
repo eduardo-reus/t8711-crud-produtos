@@ -19,12 +19,21 @@ class Cliente_Terminal_View:
             return int(input("Escolha uma opção: "))
         except ValueError:
             return -1
-        
-    def ler_dados_cliente(self):
+    def ler_campo(self, rotulo, valor_atual=None):
+        if valor_atual is not None:
+            prompt = f"{rotulo} [{Fore.GREEN}{valor_atual}{Style.RESET_ALL}]: "
+        else:
+            prompt = f"{rotulo}: "
+        valor = input(prompt)
+        if valor == "" and valor_atual is not None:
+            return valor_atual
+        return valor      
+      
+    def ler_dados_cliente(self, cliente_existente=None):
         print(Fore.CYAN + Style.BRIGHT + "=== CADASTRO DE CLIENTE ===")
-        nome = input("Digite o nome do cliente: ")
-        data_nascimento = input("Digite a data de nascimento: ")
-        limite_credito = float(input("Digite o limite de crédito: "))
+        nome = self.ler_campo("Nome do cliente", cliente_existente.nome if cliente_existente else None)
+        data_nascimento = self.ler_campo("Data de nascimento", Data_Utils.data_para_string(cliente_existente.data_nascimento) if cliente_existente else None)
+        limite_credito = float(self.ler_campo("Limite de crédito", str(cliente_existente.limite_credito) if cliente_existente else None))
         return nome, data_nascimento, limite_credito
 
     def ler_id(self):

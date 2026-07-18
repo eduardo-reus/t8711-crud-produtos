@@ -37,8 +37,8 @@ class Cliente_Controller:
                     id_cliente = int(self.view.ler_id())
                     cliente_existente = self.dao.get_by_id(id_cliente)
                     if cliente_existente:
-                        nome, data_nascimento, limite_credito = self.view.ler_dados_cliente()
-                        cliente_existente.atualizar_dados(nome, data_nascimento, limite_credito)
+                        nome, data_nascimento, limite_credito = self.view.ler_dados_cliente(cliente_existente)
+                        cliente_existente.atualizar_dados(nome, Data_Utils.string_para_data(data_nascimento), limite_credito)
                         self.dao.update(cliente_existente)
                         self.view.exibir_mensagem("Cliente atualizado com sucesso!")
                     else:

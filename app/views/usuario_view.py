@@ -19,12 +19,21 @@ class Usuario_Terminal_View:
             return int(input("Escolha uma opção: "))
         except ValueError:
             return -1
-        
-    def ler_dados_usuario(self):
+    def ler_campo(self, rotulo, valor_atual=None):
+        if valor_atual is not None:
+            prompt = f"{rotulo} [{Fore.GREEN}{valor_atual}{Style.RESET_ALL}]: "
+        else:
+            prompt = f"{rotulo}: "
+        valor = input(prompt)
+        if valor == "" and valor_atual is not None:
+            return valor_atual
+        return valor  
+            
+    def ler_dados_usuario(self, usuario_existente=None):
         print(Fore.CYAN + Style.BRIGHT + "=== CADASTRO DE USUÁRIO ===")
-        nome = input("Digite o nome do usuário: ")
-        email = input("Digite a e-mail do usuário: ")
-        data_nascimento = input("Digite a data de nascimento: ")
+        nome = self.ler_campo("Nome", usuario_existente.nome if usuario_existente else None)
+        email = self.ler_campo("E-mail", usuario_existente.email if usuario_existente else None)
+        data_nascimento = self.ler_campo("Data de nascimento", Data_Utils.data_para_string(usuario_existente.data_nascimento) if usuario_existente else None)
         return nome, email, data_nascimento
 
     def ler_id(self):
