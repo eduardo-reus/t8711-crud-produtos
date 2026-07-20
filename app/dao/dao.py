@@ -1,5 +1,17 @@
 from abc import ABC, abstractmethod
 class DAO(ABC):
+
+    def __init__(self, database):
+        self._database = database
+
+    def conectar(self):
+        conexao = self._database.conectar()
+        cursor = conexao.cursor()
+        return conexao, cursor
+    
+    def desconectar(self, cursor, conexao):
+        self._database.desconectar(cursor, conexao)
+
     @abstractmethod
     def save(self, objeto):
         pass
