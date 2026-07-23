@@ -29,13 +29,13 @@ class ErpApplication:
         
         self._database = Database()  # Inicializa a conexão com o banco de dados
 
-        # Inicialização centralizada dos ecossistemas (Container de Serviços manual)
-        self._dao_produtos = Produto_DAO(self._database)
-        self._ctrl_produtos = Produto_Controller(dao=self._dao_produtos, view=Produto_Terminal_View())
-        
         self._dao_fornecedores = Fornecedor_DAO(self._database)
         self._ctrl_fornecedores = Fornecedor_Controller(dao=self._dao_fornecedores, view=Fornecedor_Terminal_View())
 
+        # Inicialização centralizada dos ecossistemas (Container de Serviços manual)
+        self._dao_produtos = Produto_DAO(self._database, self._dao_fornecedores)
+        self._ctrl_produtos = Produto_Controller(dao=self._dao_produtos, fornecedor_dao=self._dao_fornecedores, view=Produto_Terminal_View())
+        
         self._dao_usuarios = Usuario_DAO(self._database)
         self._ctrl_usuarios = Usuario_Controller(dao=self._dao_usuarios, view=Usuario_Terminal_View())        
 

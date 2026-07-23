@@ -2,14 +2,27 @@ import os
 from app.models.produto import Produto
 
 class Produto_Controller:
-    def __init__(self, dao, view):
+    def __init__(self, dao, fornecedor_dao, view):
         self.dao = dao
+        self.fornecedor_dao = fornecedor_dao
         self.view = view
     
     def save(self):
         try:
+            fornecedores = self.fornecedor_dao.get_all()
+            if not fornecedores:
+                self.view.exibir_mensagem("Cadastre fornecedores antes de cadastrar produtos", False)
+                return
+            self.view.exibir_fornecedores(fornecedores)
+            id_fornecedor = self.view.ler_fornecedor()
+            fornecedor = self.fornecedor_dao.get_by_id(id_fornecedor)
+
+            if fornecedor is None:
+                self.view.exibir_mensagem("Fornecedor não encontrado.", False)
+                return
+
             nome, estoque, preco = self.view.ler_dados_produto()
-            produto = Produto(None,nome, estoque, preco)
+            produto = Produto(None,nome, estoque, preco, fornecedor)
             self.dao.save(produto)
             self.view.exibir_mensagem("Produto cadastrado com sucesso!")
         except ValueError:
@@ -28,8 +41,21 @@ class Produto_Controller:
             id_produto = int(self.view.ler_id())
             produto_existente = self.dao.get_by_id(id_produto)
             if produto_existente:
+                fornecedores = self.fornecedor_dao.get_all()
+                if not fornecedores:
+                    self.view.exibir_mensagem("Cadastre fornecedores antes de cadastrar produtos", False)
+                    return
+                
+                
+                self.view.exibir_fornecedores(fornecedores)
+                id_fornecedor = self.view.ler_fornecedor(produto_existente.fornecedor.id)
+                fornecedor = self.fornecedor_dao.get_by_id(int(id_fornecedor))
+
+                if fornecedor is None:
+                    self.view.exibir_mensagem("Fornecedor não encontrado.", False)
+                    return                
                 nome, estoque, preco = self.view.ler_dados_produto(produto_existente)
-                produto_existente.atualizar_dados(nome, estoque, preco)
+                produto_existente.atualizar_dados(nome, estoque, preco, fornecedor)
                 self.dao.update(produto_existente)
                 self.view.exibir_mensagem("Produto atualizado com sucesso!")
             else:
