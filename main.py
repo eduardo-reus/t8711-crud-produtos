@@ -7,6 +7,16 @@ from app.dao.produto_dao import Produto_DAO
 from app.views.produto_view import Produto_Terminal_View
 from app.controllers.produto_controller import Produto_Controller
 
+# Componentes de Estados
+from app.dao.estado_dao import Estado_DAO
+from app.views.estado_view import Estado_Terminal_View
+from app.controllers.estado_controller import Estado_Controller
+
+# Componentes de Cidades
+from app.dao.cidade_dao import Cidade_DAO
+from app.views.cidade_view import Cidade_Terminal_View
+from app.controllers.cidade_controller import Cidade_Controller
+
 # Componentes de Fornecedores
 from app.dao.fornecedor_dao import Fornecedor_DAO
 from app.views.fornecedor_view import Fornecedor_Terminal_View
@@ -29,18 +39,25 @@ class ErpApplication:
         
         self._database = Database()  # Inicializa a conexão com o banco de dados
 
+        self._dao_estados = Estado_DAO(self._database)
+        self._ctrl_estados = Estado_Controller(dao=self._dao_estados, view=Estado_Terminal_View())
+
+        self._dao_cidades = Cidade_DAO(self._database, self._dao_estados)
+        self._ctrl_cidades = Cidade_Controller(dao=self._dao_cidades, estado_dao=self._dao_estados, view=Cidade_Terminal_View())
+     
+
         self._dao_fornecedores = Fornecedor_DAO(self._database)
         self._ctrl_fornecedores = Fornecedor_Controller(dao=self._dao_fornecedores, view=Fornecedor_Terminal_View())
 
         # Inicialização centralizada dos ecossistemas (Container de Serviços manual)
         self._dao_produtos = Produto_DAO(self._database, self._dao_fornecedores)
-        self._ctrl_produtos = Produto_Controller(dao=self._dao_produtos, fornecedor_dao=self._dao_fornecedores, view=Produto_Terminal_View())
+        self._ctrl_produtos = Produto_Controller(dao=self._dao_produtos, fornecedor_dao=self._dao_estados, view=Cidade_Terminal_View())
         
-        self._dao_usuarios = Usuario_DAO(self._database)
-        self._ctrl_usuarios = Usuario_Controller(dao=self._dao_usuarios, view=Usuario_Terminal_View())        
+        self._dao_usuarios = Usuario_DAO(self._database, self._dao_cidades)
+        self._ctrl_usuarios = Usuario_Controller(dao=self._dao_usuarios, cidade_dao=self._dao_cidades, view=Usuario_Terminal_View())        
 
-        self._dao_clientes = Cliente_DAO(self._database)
-        self._ctrl_clientes = Cliente_Controller(dao=self._dao_clientes, view=Cliente_Terminal_View())   
+        self._dao_clientes = Cliente_DAO(self._database, self._dao_cidades)
+        self._ctrl_clientes = Cliente_Controller(dao=self._dao_clientes, cidade_dao=self._dao_cidades, view=Cliente_Terminal_View())   
 
     def _renderizar_menu_principal(self):
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -49,7 +66,9 @@ class ErpApplication:
         print("2 - Gerenciar Fornecedores")
         print("3 - Gerenciar Usuários")
         print("4 - Gerenciar Clientes")
-        
+        print("5 - Gerenciar Estados")
+        print("6 - Gerenciar Cidades")        
+
         print("0 - Sair do Sistema")
         print(Fore.GREEN + "==================================")
         try:
@@ -71,7 +90,11 @@ class ErpApplication:
             elif opcao == 3:
                 self._ctrl_usuarios.inicializar_sistema()    
             elif opcao == 4:
-                self._ctrl_clientes.inicializar_sistema()                               
+                self._ctrl_clientes.inicializar_sistema()     
+            elif opcao == 5:
+                self._ctrl_estados.inicializar_sistema()                                            
+            elif opcao == 6:
+                self._ctrl_cidades.inicializar_sistema()  
             else:
                 print(Fore.RED + "\nOpção inválida!")
                 input(Fore.WHITE + "Pressione Enter para continuar...")

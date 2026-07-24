@@ -1,31 +1,27 @@
 from app.dao.dao import DAO
-from app.models.usuario import Usuario
+from app.models.cidade import Cidade
 
 
-class Usuario_DAO(DAO):
+class Cidade_DAO(DAO):
 
-    def __init__(self, database, cidade_dao):
+    def __init__(self, database, estado_dao):
         super().__init__(database)
-        self._cidade_dao = cidade_dao
+        self._estado_dao = estado_dao
 
-    def save(self, usuario):
+    def save(self, cidade):
 
         conexao, cursor = self.conectar()
 
         try:
 
             sql = """
-                    INSERT INTO USUARIO
+                    INSERT INTO CIDADE
                     (
                         NOME,
-                        EMAIL,
-                        DATA_NASCIMENTO,
-                        CIDADE_ID
+                        ESTADO_ID
                     )
                     VALUES
                     (
-                        %s,
-                        %s,
                         %s,
                         %s
                     )
@@ -34,18 +30,16 @@ class Usuario_DAO(DAO):
             cursor.execute(
                 sql,
                 (
-                    usuario.nome,
-                    usuario.email,
-                    usuario.data_nascimento,
-                    usuario.cidade.id
+                    cidade.nome,
+                    cidade.estado.id
                 )
             )
 
             conexao.commit()
 
-            usuario.id = cursor.lastrowid
+            cidade.id = cursor.lastrowid
 
-            return usuario
+            return cidade
 
         except Exception:
             conexao.rollback()
@@ -64,11 +58,9 @@ class Usuario_DAO(DAO):
                     SELECT
                         ID,
                         NOME,
-                        EMAIL,
-                        DATA_NASCIMENTO,
-                        CIDADE_ID
+                        ESTADO_ID
                     FROM
-                        USUARIO
+                        CIDADE
                     ORDER BY
                         NOME
                   """
@@ -77,27 +69,25 @@ class Usuario_DAO(DAO):
 
             registros = cursor.fetchall()
 
-            usuarios = []
+            cidades = []
 
             for registro in registros:
 
-                cidade = self._cidade_dao.get_by_id(
-                    registro[4]
+                estado = self._estado_dao.get_by_id(
+                    registro[2]
                 )
 
-                usuarios.append(
+                cidades.append(
 
-                    Usuario(
+                    Cidade(
                         registro[0],
                         registro[1],
-                        registro[2],
-                        registro[3],
-                        cidade
+                        estado
                     )
 
                 )
 
-            return usuarios
+            return cidades
 
         finally:
             self.desconectar(cursor, conexao)
@@ -112,11 +102,9 @@ class Usuario_DAO(DAO):
                     SELECT
                         ID,
                         NOME,
-                        EMAIL,
-                        DATA_NASCIMENTO,
-                        CIDADE_ID
+                        ESTADO_ID
                     FROM
-                        USUARIO
+                        CIDADE
                     WHERE
                         ID = %s
                   """
@@ -128,34 +116,30 @@ class Usuario_DAO(DAO):
             if registro is None:
                 return None
 
-            cidade = self._cidade_dao.get_by_id(
-                registro[4]
+            estado = self._estado_dao.get_by_id(
+                registro[2]
             )
 
-            return Usuario(
+            return Cidade(
                 registro[0],
                 registro[1],
-                registro[2],
-                registro[3],
-                cidade
+                estado
             )
 
         finally:
             self.desconectar(cursor, conexao)
 
-    def update(self, usuario):
+    def update(self, cidade):
 
         conexao, cursor = self.conectar()
 
         try:
 
             sql = """
-                    UPDATE USUARIO
+                    UPDATE CIDADE
                     SET
                         NOME = %s,
-                        EMAIL = %s,
-                        DATA_NASCIMENTO = %s,
-                        CIDADE_ID = %s
+                        ESTADO_ID = %s
                     WHERE
                         ID = %s
                   """
@@ -163,11 +147,9 @@ class Usuario_DAO(DAO):
             cursor.execute(
                 sql,
                 (
-                    usuario.nome,
-                    usuario.email,
-                    usuario.data_nascimento,
-                    usuario.cidade.id,
-                    usuario.id
+                    cidade.nome,
+                    cidade.estado.id,
+                    cidade.id
                 )
             )
 
@@ -190,9 +172,8 @@ class Usuario_DAO(DAO):
 
             sql = """
                     DELETE
-                    FROM USUARIO
-                    WHERE
-                        ID = %s
+                    FROM CIDADE
+                    WHERE ID = %s
                   """
 
             cursor.execute(sql, (id,))

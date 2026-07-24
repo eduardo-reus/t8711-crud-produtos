@@ -1,47 +1,75 @@
+from app.models.cidade import Cidade
+from app.core.data_utils import Data_Utils
+
+
 class Usuario:
-    def __init__(self, id, nome, email, data_nascimento):
+
+    def __init__(
+        self,
+        id,
+        nome,
+        email,
+        data_nascimento,
+        cidade: Cidade
+    ):
         self._id = id
-        self._nome = nome  
+        self._nome = nome
         self._email = email
         self._data_nascimento = data_nascimento
+        self._cidade = cidade
+
     @property
     def id(self):
         return self._id
-    
+
     @id.setter
     def id(self, novo_id):
         self._id = novo_id
 
-    # Encapsulamento do Nome
     @property
     def nome(self):
-        return self._nome
-    
+        return self._nome.upper()
+
     @nome.setter
     def nome(self, novo_nome):
         self._nome = novo_nome
 
-    # Encapsulamento do Email
     @property
     def email(self):
         return self._email
-    
+
     @email.setter
     def email(self, novo_email):
         self._email = novo_email
 
-    # Encapsulamento da Data de Nascimento
     @property
     def data_nascimento(self):
         return self._data_nascimento
-    
+
     @data_nascimento.setter
     def data_nascimento(self, nova_data):
-        self._data_nascimento = nova_data  
-          
-    def atualizar_dados(self, novo_nome, novo_email, novo_data_nascimento):
+        self._data_nascimento = nova_data
+
+    @property
+    def cidade(self):
+        return self._cidade
+
+    @cidade.setter
+    def cidade(self, nova_cidade):
+        self._cidade = nova_cidade
+
+    @property
+    def idade(self):
+        return Data_Utils.calcular_idade(self._data_nascimento)
+
+    def atualizar_dados(
+        self,
+        novo_nome,
+        novo_email,
+        nova_data_nascimento,
+        nova_cidade
+    ):
         self._nome = novo_nome
         self._email = novo_email
-        self._data_nascimento = novo_data_nascimento
-            
-    
+        self._data_nascimento = nova_data_nascimento
+        self._cidade = nova_cidade
