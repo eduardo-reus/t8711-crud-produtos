@@ -6,21 +6,37 @@ from app.core.data_utils import Data_Utils
 
 class Usuario_Controller:
 
-    def __init__(self, dao, cidade_dao, view):
+    def __init__(self, dao, cidade_dao, estado_dao, view):
         self.dao = dao
         self.cidade_dao = cidade_dao
+        self.estado_dao = estado_dao
         self.view = view
 
     def save(self):
 
         try:
 
-            cidades = self.cidade_dao.get_all()
+            estados = self.estado_dao.get_all()
+
+            if not estados:
+
+                self.view.exibir_mensagem(
+                    "Cadastre um estado antes de cadastrar usuários.",
+                    False
+                )
+
+                return
+
+            self.view.exibir_estados(estados)
+
+            id_estado = int(self.view.ler_estado())
+
+            cidades = self.cidade_dao.get_by_estado(id_estado)
 
             if not cidades:
 
                 self.view.exibir_mensagem(
-                    "Cadastre uma cidade antes de cadastrar usuários.",
+                    "Não existem cidades cadastradas para esse estado.",
                     False
                 )
 
@@ -100,7 +116,26 @@ class Usuario_Controller:
 
                 return
 
-            cidades = self.cidade_dao.get_all()
+            estados = self.estado_dao.get_all()
+
+            self.view.exibir_estados(estados)
+
+            id_estado = self.view.ler_estado(
+                usuario_existente.cidade.estado.id
+            )
+
+            cidades = self.cidade_dao.get_by_estado(
+                int(id_estado)
+            )
+
+            if not cidades:
+
+                self.view.exibir_mensagem(
+                    "Não existem cidades cadastradas para esse estado.",
+                    False
+                )
+
+                return
 
             self.view.exibir_cidades(cidades)
 

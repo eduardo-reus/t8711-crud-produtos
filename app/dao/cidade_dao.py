@@ -41,11 +41,13 @@ class Cidade_DAO(DAO):
 
             return cidade
 
-        except Exception:
+        except Exception as e:
+
             conexao.rollback()
-            raise
+            raise e
 
         finally:
+
             self.desconectar(cursor, conexao)
 
     def get_all(self):
@@ -90,6 +92,57 @@ class Cidade_DAO(DAO):
             return cidades
 
         finally:
+
+            self.desconectar(cursor, conexao)
+
+    def get_by_estado(self, id_estado):
+
+        conexao, cursor = self.conectar()
+
+        try:
+
+            sql = """
+                    SELECT
+                        ID,
+                        NOME,
+                        ESTADO_ID
+                    FROM
+                        CIDADE
+                    WHERE
+                        ESTADO_ID = %s
+                    ORDER BY
+                        NOME
+                  """
+
+            cursor.execute(
+                sql,
+                (id_estado,)
+            )
+
+            registros = cursor.fetchall()
+
+            cidades = []
+
+            for registro in registros:
+
+                estado = self._estado_dao.get_by_id(
+                    registro[2]
+                )
+
+                cidades.append(
+
+                    Cidade(
+                        registro[0],
+                        registro[1],
+                        estado
+                    )
+
+                )
+
+            return cidades
+
+        finally:
+
             self.desconectar(cursor, conexao)
 
     def get_by_id(self, id):
@@ -127,6 +180,7 @@ class Cidade_DAO(DAO):
             )
 
         finally:
+
             self.desconectar(cursor, conexao)
 
     def update(self, cidade):
@@ -157,11 +211,13 @@ class Cidade_DAO(DAO):
 
             return cursor.rowcount > 0
 
-        except Exception:
+        except Exception as e:
+
             conexao.rollback()
-            raise
+            raise e
 
         finally:
+
             self.desconectar(cursor, conexao)
 
     def delete(self, id):
@@ -182,9 +238,11 @@ class Cidade_DAO(DAO):
 
             return cursor.rowcount > 0
 
-        except Exception:
+        except Exception as e:
+
             conexao.rollback()
-            raise
+            raise e
 
         finally:
+
             self.desconectar(cursor, conexao)

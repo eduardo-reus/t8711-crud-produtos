@@ -27,83 +27,174 @@ from app.dao.usuario_dao import Usuario_DAO
 from app.views.usuario_view import Usuario_Terminal_View
 from app.controllers.usuario_controller import Usuario_Controller
 
-# Componentes de CLientes
+# Componentes de Clientes
 from app.dao.cliente_dao import Cliente_DAO
 from app.views.cliente_view import Cliente_Terminal_View
 from app.controllers.cliente_controller import Cliente_Controller
 
+
 class ErpApplication:
+
     def __init__(self):
-        # Inicializa o colorama interno
+
         init(autoreset=True)
-        
-        self._database = Database()  # Inicializa a conexão com o banco de dados
 
-        self._dao_estados = Estado_DAO(self._database)
-        self._ctrl_estados = Estado_Controller(dao=self._dao_estados, view=Estado_Terminal_View())
+        self._database = Database()
 
-        self._dao_cidades = Cidade_DAO(self._database, self._dao_estados)
-        self._ctrl_cidades = Cidade_Controller(dao=self._dao_cidades, estado_dao=self._dao_estados, view=Cidade_Terminal_View())
-     
+        # ===========================
+        # ESTADOS
+        # ===========================
 
-        self._dao_fornecedores = Fornecedor_DAO(self._database)
-        self._ctrl_fornecedores = Fornecedor_Controller(dao=self._dao_fornecedores, view=Fornecedor_Terminal_View())
+        self._dao_estados = Estado_DAO(
+            self._database
+        )
 
-        # Inicialização centralizada dos ecossistemas (Container de Serviços manual)
-        self._dao_produtos = Produto_DAO(self._database, self._dao_fornecedores)
-        self._ctrl_produtos = Produto_Controller(dao=self._dao_produtos, fornecedor_dao=self._dao_estados, view=Cidade_Terminal_View())
-        
-        self._dao_usuarios = Usuario_DAO(self._database, self._dao_cidades)
-        self._ctrl_usuarios = Usuario_Controller(dao=self._dao_usuarios, cidade_dao=self._dao_cidades, view=Usuario_Terminal_View())        
+        self._ctrl_estados = Estado_Controller(
+            dao=self._dao_estados,
+            view=Estado_Terminal_View()
+        )
 
-        self._dao_clientes = Cliente_DAO(self._database, self._dao_cidades)
-        self._ctrl_clientes = Cliente_Controller(dao=self._dao_clientes, cidade_dao=self._dao_cidades, view=Cliente_Terminal_View())   
+        # ===========================
+        # CIDADES
+        # ===========================
+
+        self._dao_cidades = Cidade_DAO(
+            self._database,
+            self._dao_estados
+        )
+
+        self._ctrl_cidades = Cidade_Controller(
+            dao=self._dao_cidades,
+            estado_dao=self._dao_estados,
+            view=Cidade_Terminal_View()
+        )
+
+        # ===========================
+        # FORNECEDORES
+        # ===========================
+
+        self._dao_fornecedores = Fornecedor_DAO(
+            self._database
+        )
+
+        self._ctrl_fornecedores = Fornecedor_Controller(
+            dao=self._dao_fornecedores,
+            view=Fornecedor_Terminal_View()
+        )
+
+        # ===========================
+        # PRODUTOS
+        # ===========================
+
+        self._dao_produtos = Produto_DAO(
+            self._database,
+            self._dao_fornecedores
+        )
+
+        self._ctrl_produtos = Produto_Controller(
+            dao=self._dao_produtos,
+            fornecedor_dao=self._dao_fornecedores,
+            view=Produto_Terminal_View()
+        )
+
+        # ===========================
+        # USUÁRIOS
+        # ===========================
+
+        self._dao_usuarios = Usuario_DAO(
+            self._database,
+            self._dao_cidades
+        )
+
+        self._ctrl_usuarios = Usuario_Controller(
+            dao=self._dao_usuarios,
+            cidade_dao=self._dao_cidades,
+            estado_dao=self._dao_estados,
+            view=Usuario_Terminal_View()
+        )
+
+        # ===========================
+        # CLIENTES
+        # ===========================
+
+        self._dao_clientes = Cliente_DAO(
+            self._database,
+            self._dao_cidades
+        )
+
+        self._ctrl_clientes = Cliente_Controller(
+            dao=self._dao_clientes,
+            cidade_dao=self._dao_cidades,
+            estado_dao=self._dao_estados,
+            view=Cliente_Terminal_View()
+        )
 
     def _renderizar_menu_principal(self):
-        os.system('cls' if os.name == 'nt' else 'clear')
+
+        os.system("cls" if os.name == "nt" else "clear")
+
         print(Fore.GREEN + Style.BRIGHT + "=== SISTEMA CORPORATIVO ERP ===")
         print("1 - Gerenciar Produtos")
         print("2 - Gerenciar Fornecedores")
         print("3 - Gerenciar Usuários")
         print("4 - Gerenciar Clientes")
         print("5 - Gerenciar Estados")
-        print("6 - Gerenciar Cidades")        
-
+        print("6 - Gerenciar Cidades")
         print("0 - Sair do Sistema")
-        print(Fore.GREEN + "==================================")
+        print(Fore.GREEN + "=" * 34)
+
         try:
             return int(input("Escolha o módulo: "))
         except ValueError:
             return -1
 
     def run(self):
+
         while True:
+
             opcao = self._renderizar_menu_principal()
-            
+
             if opcao == 0:
+
                 print("\nEncerrando sistema corporativo...")
                 break
-            elif opcao == 1:
-                self._ctrl_produtos.inicializar_sistema()
-            elif opcao == 2:
-                self._ctrl_fornecedores.inicializar_sistema()
-            elif opcao == 3:
-                self._ctrl_usuarios.inicializar_sistema()    
-            elif opcao == 4:
-                self._ctrl_clientes.inicializar_sistema()     
-            elif opcao == 5:
-                self._ctrl_estados.inicializar_sistema()                                            
-            elif opcao == 6:
-                self._ctrl_cidades.inicializar_sistema()  
-            else:
-                print(Fore.RED + "\nOpção inválida!")
-                input(Fore.WHITE + "Pressione Enter para continuar...")
 
+            elif opcao == 1:
+
+                self._ctrl_produtos.inicializar_sistema()
+
+            elif opcao == 2:
+
+                self._ctrl_fornecedores.inicializar_sistema()
+
+            elif opcao == 3:
+
+                self._ctrl_usuarios.inicializar_sistema()
+
+            elif opcao == 4:
+
+                self._ctrl_clientes.inicializar_sistema()
+
+            elif opcao == 5:
+
+                self._ctrl_estados.inicializar_sistema()
+
+            elif opcao == 6:
+
+                self._ctrl_cidades.inicializar_sistema()
+
+            else:
+
+                print(Fore.RED + "\nOpção inválida!")
+
+                input(
+                    Fore.WHITE +
+                    "Pressione Enter para continuar..."
+                )
 
 
 if __name__ == "__main__":
-    # Instancia a aplicação que gerencia suas próprias dependências
+
     app = ErpApplication()
-    
-    # Inicia o ciclo de vida do sistema
+
     app.run()

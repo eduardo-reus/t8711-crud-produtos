@@ -17,7 +17,7 @@ class Usuario_Terminal_View:
         print("3 - Atualizar usuário")
         print("4 - Excluir usuário")
         print("0 - Sair")
-        print(Fore.CYAN + "=" * 70)
+        print(Fore.CYAN + "=" * 60)
 
         try:
             return int(input("Escolha uma opção: "))
@@ -40,7 +40,7 @@ class Usuario_Terminal_View:
 
     def ler_dados_usuario(self, usuario_existente=None):
 
-        print(Fore.CYAN + Style.BRIGHT + "=== DADOS DO USUÁRIO ===")
+        print(Fore.CYAN + Style.BRIGHT + "=== CADASTRO DE USUÁRIO ===")
 
         nome = self.ler_campo(
             "Nome",
@@ -48,7 +48,7 @@ class Usuario_Terminal_View:
         )
 
         email = self.ler_campo(
-            "E-mail",
+            "Email",
             usuario_existente.email if usuario_existente else None
         )
 
@@ -61,6 +61,43 @@ class Usuario_Terminal_View:
 
         return nome, email, data_nascimento
 
+    def exibir_estados(self, estados):
+
+        print(Fore.YELLOW + "\n--- ESTADOS DISPONÍVEIS ---")
+
+        print(
+            f"{'ID':<4} | "
+            f"{'UF':<4} | "
+            f"{'ESTADO':<30}"
+        )
+
+        print("-" * 45)
+
+        for estado in estados:
+
+            print(
+                f"{estado.id:<4} | "
+                f"{estado.sigla:<4} | "
+                f"{estado.nome:<30}"
+            )
+
+        print("-" * 45)
+
+    def ler_estado(self, estado_atual=None):
+
+        if estado_atual is None:
+
+            return input("Informe o ID do estado: ")
+
+        valor = input(
+            f"Estado [{Fore.GREEN}{estado_atual}{Style.RESET_ALL}]: "
+        )
+
+        if valor == "":
+            return estado_atual
+
+        return valor
+
     def exibir_cidades(self, cidades):
 
         print(Fore.YELLOW + "\n--- CIDADES DISPONÍVEIS ---")
@@ -68,7 +105,7 @@ class Usuario_Terminal_View:
         print(
             f"{'ID':<4} | "
             f"{'CIDADE':<30} | "
-            f"{'UF':<4}"
+            f"{'UF':<3}"
         )
 
         print("-" * 45)
@@ -78,7 +115,7 @@ class Usuario_Terminal_View:
             print(
                 f"{cidade.id:<4} | "
                 f"{cidade.nome:<30} | "
-                f"{cidade.estado.sigla:<4}"
+                f"{cidade.estado.sigla:<3}"
             )
 
         print("-" * 45)
@@ -86,6 +123,7 @@ class Usuario_Terminal_View:
     def ler_cidade(self, cidade_atual=None):
 
         if cidade_atual is None:
+
             return input("Informe o ID da cidade: ")
 
         valor = input(
@@ -113,28 +151,28 @@ class Usuario_Terminal_View:
         print(
             f"{'ID':<4} | "
             f"{'NOME':<20} | "
-            f"{'EMAIL':<35} | "
+            f"{'EMAIL':<30} | "
             f"{'NASCIMENTO':<12} | "
             f"{'IDADE':<5} | "
-            f"{'CIDADE':<20} | "
+            f"{'CIDADE':<25} | "
             f"{'UF':<3}"
         )
 
-        print("-" * 125)
+        print("-" * 120)
 
         for usuario in usuarios:
 
             print(
                 f"{usuario.id:<4} | "
                 f"{usuario.nome:<20} | "
-                f"{usuario.email:<35} | "
+                f"{usuario.email:<30} | "
                 f"{Data_Utils.data_para_string(usuario.data_nascimento):<12} | "
                 f"{usuario.idade:<5} | "
-                f"{usuario.cidade.nome:<20} | "
+                f"{usuario.cidade.nome:<25} | "
                 f"{usuario.cidade.estado.sigla:<3}"
             )
 
-        print("-" * 125)
+        print("-" * 120)
 
     def exibir_mensagem(self, mensagem, sucesso=True):
 
